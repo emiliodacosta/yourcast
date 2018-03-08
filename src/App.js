@@ -6,7 +6,7 @@ import getTheWeather from 'get-the-weather'
 
 let options = {
   zip: 11385,
-  DarkSkyKey: '0c640f5a47997977f7ba65924743b1e1',
+  DarkSkyKey: 'your key here',
   ZipCodeApiKey: `zipcodeapi.com key here`
 }
 
