@@ -1,0 +1,10 @@
+{
+  "extends": "fullstack",
+  "parser": "babel-eslint",
+  "rules": {
+    "semi": [
+      1,
+      "never"
+    ]
+  }
+}
