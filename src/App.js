@@ -15,7 +15,6 @@ class App extends Component {
 
   getWeather = ( {coords} ) => {
     const weatherData = 'http://api.openweathermap.org/data/2.5/weather?lat=' + coords.latitude + '&lon=' + coords.longitude + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-    console.log(weatherData)
     return axios.get(weatherData)
       .then(function (response) {
         console.log(response)
@@ -27,32 +26,30 @@ class App extends Component {
         })
       })
   }
- showPosition = (position) => {
-      const coords = {
-        lat: position.coords.latitude,
-        lon: position.coords.longitude
-      }
-      // console.log('COORDS', coords)
-      this.setState({
-        lat: coords.lat,
-        lon: coords.lon
-      }, () => {
-        console.log(this.state)
-        this.getWeather()
-      })
-    }
-  getCoords() {
+//  showPosition = (position) => {
+//       const coords = {
+//         lat: position.coords.latitude,
+//         lon: position.coords.longitude
+//       }
+//       // console.log('COORDS', coords)
+//       this.setState({
+//         lat: coords.lat,
+//         lon: coords.lon
+//       }, () => {
+//         console.log(this.state)
+//         this.getWeather()
+//       })
+//     }
+
+  getCoordsAndWeather() {
     return navigator.geolocation.getCurrentPosition(this.getWeather, console.error)
   }
 
   componentDidMount() {
-    this.getCoords()
+    this.getCoordsAndWeather()
   }
 
   render() {
-    // console.log(this.state.weatherData.main)
-    // console.log('LAT', this.state.lat)
-    console.log(process.env.REACT_APP_OPEN_WEATHER_KEY)
     return (
       <div className="App">
         <header className="App-header">
@@ -61,14 +58,22 @@ class App extends Component {
           <h3>The Playlist for Your Forecast</h3>
           <div>
             <h4>
+
             {this.state.weatherData.main && (this.state.weatherData.main.temp * (9 / 5) - 459.67).toFixed(0)}°F /&nbsp;
             {this.state.weatherData.main && (this.state.weatherData.main.temp - 273.15).toFixed(1)}°C
+
             </h4>
           </div>
-
         </header>
+        <div>
+          <img src='https://maps.googleapis.com/maps/api/staticmap?center=40.7,+-74&zoom=13&scale=1&size=600x300&maptype=roadmap&key=AIzaSyD_PJaoTDrgpGawta73DrtuopubfAwj0L8&format=png&visual_refresh=true" alt="Google Map'
 
-        <ReactPlayer url="https://soundcloud.com/as-you-like-it/max-graef-b2b-glenn-astro-ayli" playing={false} />
+
+           />
+        </div>
+        <div>
+          <ReactPlayer url="https://soundcloud.com/as-you-like-it/max-graef-b2b-glenn-astro-ayli" playing={false} />
+        </div>
       </div>
     )
   }
@@ -76,3 +81,5 @@ class App extends Component {
 
 export default App
 
+// src='https://maps.googleapis.com/maps/api/staticmap?center=
+//           "+latlon+"&zoom=14&size=400x300&sensor=false&key=YOUR_:KEY'
