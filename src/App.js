@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import ReactPlayer from 'react-player'
 import axios from 'axios'
+import Time from 'react-time'
 
 class App extends Component {
 
@@ -10,17 +11,20 @@ class App extends Component {
     this.state = {
       weatherData: {},
       lat: 0,
-      lon: 0
+      lon: 0,
+      condition: ''
     }
+    this.getWeatherConditions = this.getWeatherConditions.bind(this)
+    this.onPreviewChange = this.onPreviewChange.bind(this)
   }
 
-  getWeather = ( {coords} ) => {
+  getWeather = ({ coords }) => {
     this.setState({
       lat: coords.latitude,
       lon: coords.longitude
     })
     let weatherData = 'http://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + coords.longitude + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-    // weatherData = 'http://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+    weatherData = 'http://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
     return axios.get(weatherData)
       .then(function (response) {
         console.log(response)
@@ -37,6 +41,36 @@ class App extends Component {
     return navigator.geolocation.getCurrentPosition(this.getWeather, console.error)
   }
 
+  onPreviewChange(condition, evt) {
+    condition = evt.target.value
+    return <div>{this.getWeatherConditions(condition, condition)}</div>
+  }
+
+  getWeatherConditions(condition, description) {
+    switch (description) {
+      case 'clear sky':
+        condition = 'clear sky'
+        return <ReactPlayer url="https://www.youtube.com/watch?v=sYi7uEvEEmk" playing={true} />
+      case 'few clouds' || 'scattered clouds' || 'broken clouds':
+        condition = 'clouds'
+        return <ReactPlayer url="https://www.youtube.com/watch?v=HPODefkT1Qg" playing={false} />
+      case 'shower rain' || 'rain':
+        condition = 'rain'
+        return <ReactPlayer url="https://www.youtube.com/watch?v=46N0PgjFqyw" playing={false} />
+      case 'thunderstorm':
+        condition = 'thunderstorm'
+        return <ReactPlayer url="https://soundcloud.com/deuxhelix/ambulance-deuxhelixrmx" playing={false} />
+      case 'snow':
+        condition = 'snow'
+        return <ReactPlayer url="https://soundcloud.com/ibanzero/voltereta" playing={false} />
+      case 'mist':
+        condition = 'mist'
+        return <ReactPlayer url="https://www.youtube.com/watch?v=hEm0zbJe0jY" playing={false} />
+      default:
+        condition = 'select'
+    }
+  }
+
   componentDidMount() {
     this.getCoordsAndWeather()
   }
@@ -45,6 +79,9 @@ class App extends Component {
     const lat = this.state.lat
     const lon = this.state.lon
     const weather = this.state.weatherData
+    const getWeatherConditions = this.getWeatherConditions
+    let now = new Date()
+    let condition = ''
     console.log(weather)
     return (
       <div className="App">
@@ -53,63 +90,42 @@ class App extends Component {
           <h1 className="App-title">Yourcast</h1>
           <h3>Music for Your Forecast</h3>
           <div>
-
-
             {weather.main && weather.weather[0].description ?
-              <p> {weather.weather[0].description.split(' ')[0].charAt(0).toUpperCase() + weather.weather[0].description.slice(1)}
+              <p>{(weather.main.temp * (9 / 5) - 459.67).toFixed(0)}°F
+              & {weather.weather[0].description} @ <Time value={now} format="HH:mm" />
                 <br />
-                {(weather.main.temp * (9 / 5) - 459.67).toFixed(0)}°F ~&nbsp;{(weather.main.temp - 273.15).toFixed(1)}°C
               </p>
               : <p> loading weather... </p>
             }
-
-            {weather.main && weather.weather[0].description.includes('clear') ?
-              <p> clear
-              </p>
-              : <p> loading weather... </p>
-            }
-
-            {weather.main && weather.weather[0].description.includes('clouds') ?
-              <p> clouds
-              </p>
-              : <p> loading weather... </p>
-            }
-
-            {weather.main && weather.weather[0].description.includes('rain') ?
-              <p> rain
-              </p>
-              : <p> loading weather... </p>
-            }
-
-            {weather.main && weather.weather[0].description.includes('thunder') ?
-              <p> thunderstorm
-              </p>
-              : <p> loading weather... </p>
-            }
-
-
-            {weather.main && weather.weather[0].description.includes('snow') ?
-              <p> snow
-              </p>
-              : <p> loading weather... </p>
-            }
-
-            {weather.main && weather.weather[0].description.includes('mist') ?
-              <p> mist
-              </p>
-              : <p> loading weather... </p>
-            }
-
           </div>
         </header>
-        <div>
+        <div className='map'>
           {lat !== 0 && lon !== 0 ?
             <img src={"https://maps.googleapis.com/maps/api/staticmap?center=" + lat + ",+" + lon + "&zoom=13&scale=1&size=600x300&maptype=roadmap&key=AIzaSyD_PJaoTDrgpGawta73DrtuopubfAwj0L8&format=png&visual_refresh=true"} alt="Google Map" />
             : <p> loading map... </p>
           }
         </div>
+        <div className='preview'>
+          <span>Preview music for other weather conditions</span>
+          <select selected="select" onChange={(evt) => this.onPreviewChange(condition, evt)}>
+            <option value="select">select</option>
+            <option value="clear sky">clear sky</option>
+            <option value="clouds">clouds</option>
+            <option value="rain">rain</option>
+            <option value="thunderstorm">thunderstorm</option>
+            <option value="snow">snow</option>
+            <option value="mist">mist</option>
+          </select>
+        </div>
+
         <div>
-          <ReactPlayer url="https://soundcloud.com/as-you-like-it/max-graef-b2b-glenn-astro-ayli" playing={false} />
+          {weather.main && weather.weather[0].description ?
+            (condition.length > 1 && condition !== weather.weather[0].description && condition !== 'select' ?
+              getWeatherConditions(condition, condition)
+              : getWeatherConditions(condition, weather.weather[0].description)
+            )
+            : <p> loading music... </p>
+          }
         </div>
       </div>
     )
@@ -117,3 +133,6 @@ class App extends Component {
 }
 
 export default App
+
+// For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
+
