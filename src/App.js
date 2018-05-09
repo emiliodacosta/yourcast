@@ -26,7 +26,7 @@ class App extends Component {
       lon: coords.longitude
     })
     let weatherData = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + coords.longitude + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-    weatherData = 'http://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+    weatherData = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
     return axios.get(weatherData)
       .then(function (response) {
         console.log(response)
@@ -157,3 +157,4 @@ class App extends Component {
 export default App
 
 // For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
+// netlify
