@@ -94,6 +94,7 @@ class App extends Component {
           <img src={'/android-chrome-256x256.png'} className="App-logo" alt="logo" />
           <h1 className="App-title">Yourcast</h1>
           <h3>Music for Your Forecast</h3>
+          <br />
           <div>
             {weather.main && weather.weather[0].description ?
               <p>{(weather.main.temp * (9 / 5) - 459.67).toFixed(0)}°F
@@ -111,18 +112,21 @@ class App extends Component {
           }
         </div>
         <br />
+        <br />
         <div className="weatherTrackTitle">
             {weather.main && weather.weather[0].main ?
-              <p>Music for {weather.weather[0].main}</p>
+              <p>A Track for {weather.weather[0].main}</p>
               : null
             }
         </div>
+        <br />
         <div className="weatherTrack">
           {weather.main && weather.weather[0].main ?
             getMusic(weather.weather[0].main)
             : <p> loading music... </p>
           }
         </div>
+        <br />
         <br />
         <br />
         <div className="previewSelect">
