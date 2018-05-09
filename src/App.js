@@ -12,37 +12,43 @@ class App extends Component {
       weatherData: {},
       lat: 0,
       lon: 0,
-      condition: ''
+      condition: '',
+      preview: ''
     }
     this.getWeatherConditions = this.getWeatherConditions.bind(this)
     this.onPreviewChange = this.onPreviewChange.bind(this)
-  }
-
-  getWeather = ({ coords }) => {
-    this.setState({
-      lat: coords.latitude,
-      lon: coords.longitude
-    })
-    let weatherData = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + coords.longitude + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-    weatherData = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-    return axios.get(weatherData)
-      .then(function (response) {
-        console.log(response)
-        return response.data
-      })
-      .then(weather => {
-        this.setState({
-          weatherData: weather
-        })
-      })
+    this.getCoordsAndWeather = this.getCoordsAndWeather.bind(this)
   }
 
   getCoordsAndWeather() {
-    return navigator.geolocation.getCurrentPosition(this.getWeather, console.error)
+    axios.get('http://ip-api.com/json')
+      .then(function (response) {
+        console.log(response.data)
+        return response.data
+      })
+      .then((data) => {
+        this.setState({
+          lat: data.lat,
+          lon: data.lon
+        })
+        let weatherData = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.lon + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+        weatherData = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+        return axios.get(weatherData)
+          .then(function (response) {
+            console.log(response)
+            return response.data
+          })
+          .then(weather => {
+            this.setState({
+              weatherData: weather
+            })
+          })
+      })
   }
 
   onPreviewChange(condition, evt) {
     condition = evt.target.value
+    // have div below in render function, showPreview boolean dependent on selection not being select or same as actual weather
     return <div>{this.getWeatherConditions(condition, condition)}</div>
   }
 
