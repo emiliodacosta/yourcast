@@ -12,18 +12,17 @@ class App extends Component {
       weatherData: {},
       lat: 0,
       lon: 0,
-      condition: '',
       preview: ''
     }
-    this.getWeatherConditions = this.getWeatherConditions.bind(this)
-    this.onPreviewChange = this.onPreviewChange.bind(this)
     this.getCoordsAndWeather = this.getCoordsAndWeather.bind(this)
+    this.getMusic = this.getMusic.bind(this)
+    // this.onPreviewChange = this.onPreviewChange.bind(this)
   }
 
   getCoordsAndWeather() {
     axios.get('http://ip-api.com/json')
       .then(function (response) {
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
       })
       .then((data) => {
@@ -46,36 +45,31 @@ class App extends Component {
       })
   }
 
-  onPreviewChange(condition, evt) {
-    condition = evt.target.value
-    // have div below in render function, showPreview boolean dependent on selection not being select or same as actual weather
-    return <div>{this.getWeatherConditions(condition, condition)}</div>
-  }
-
-  getWeatherConditions(condition, description) {
-    switch (description) {
-      case 'clear sky':
-        condition = 'clear sky'
-        return <ReactPlayer url="https://www.youtube.com/watch?v=sYi7uEvEEmk" playing={true} />
-      case 'few clouds' || 'scattered clouds' || 'broken clouds':
-        condition = 'clouds'
+  getMusic(condition) {
+    switch (condition) {
+      case 'Clear':
+        return <ReactPlayer url="https://www.youtube.com/watch?v=sYi7uEvEEmk" playing={false} />
+      case 'Clouds':
         return <ReactPlayer url="https://www.youtube.com/watch?v=HPODefkT1Qg" playing={false} />
-      case 'shower rain' || 'rain':
-        condition = 'rain'
+      case 'Drizzle':
+        return <ReactPlayer url="https://www.youtube.com/watch?v=4fSS36Xve4k" playing={false} />
+      case 'Rain':
         return <ReactPlayer url="https://www.youtube.com/watch?v=46N0PgjFqyw" playing={false} />
-      case 'thunderstorm':
-        condition = 'thunderstorm'
+      case 'Thunderstorm':
         return <ReactPlayer url="https://soundcloud.com/deuxhelix/ambulance-deuxhelixrmx" playing={false} />
-      case 'snow':
-        condition = 'snow'
+      case 'Snow':
         return <ReactPlayer url="https://soundcloud.com/ibanzero/voltereta" playing={false} />
-      case 'mist':
-        condition = 'mist'
+      case 'Atmosphere':
         return <ReactPlayer url="https://www.youtube.com/watch?v=hEm0zbJe0jY" playing={false} />
       default:
-        condition = 'select'
     }
   }
+
+  // onPreviewChange(condition, evt) {
+  //   condition = evt.target.value
+  //   // have div below in render function, showPreview boolean dependent on selection not being select or same as actual weather
+  //   return <div>{this.getWeatherConditions(condition, condition)}</div>
+  // }
 
   componentDidMount() {
     this.getCoordsAndWeather()
@@ -85,9 +79,8 @@ class App extends Component {
     const lat = this.state.lat
     const lon = this.state.lon
     const weather = this.state.weatherData
-    const getWeatherConditions = this.getWeatherConditions
+    const getMusic = this.getMusic
     let now = new Date()
-    let condition = ''
     console.log(weather)
     return (
       <div className="App">
@@ -98,7 +91,7 @@ class App extends Component {
           <div>
             {weather.main && weather.weather[0].description ?
               <p>{(weather.main.temp * (9 / 5) - 459.67).toFixed(0)}°F
-              & {weather.weather[0].description} @ <Time value={now} format="HH:mm" />
+              & {weather.weather[0].main} {`(`}{weather.weather[0].description}{`)`} @ <Time value={now} format="HH:mm" />
                 <br />
               </p>
               : <p> loading weather... </p>
@@ -111,25 +104,10 @@ class App extends Component {
             : <p> loading map... </p>
           }
         </div>
-        <div className='preview'>
-          <span>Preview music for other weather conditions</span>
-          <select selected="select" onChange={(evt) => this.onPreviewChange(condition, evt)}>
-            <option value="select">select</option>
-            <option value="clear sky">clear sky</option>
-            <option value="clouds">clouds</option>
-            <option value="rain">rain</option>
-            <option value="thunderstorm">thunderstorm</option>
-            <option value="snow">snow</option>
-            <option value="mist">mist</option>
-          </select>
-        </div>
 
         <div>
-          {weather.main && weather.weather[0].description ?
-            (condition.length > 1 && condition !== weather.weather[0].description && condition !== 'select' ?
-              getWeatherConditions(condition, condition)
-              : getWeatherConditions(condition, weather.weather[0].description)
-            )
+          {weather.main && weather.weather[0].main ?
+            getMusic(weather.weather[0].main)
             : <p> loading music... </p>
           }
         </div>
@@ -141,4 +119,18 @@ class App extends Component {
 export default App
 
 // For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
+
+
+// <div className='preview'>
+// <span>Preview music for other weather conditions</span>
+// <select selected="select" onChange={(evt) => this.onPreviewChange(condition, evt)}>
+//   <option value="select">select</option>
+//   <option value="clear sky">clear sky</option>
+//   <option value="clouds">clouds</option>
+//   <option value="rain">rain</option>
+//   <option value="thunderstorm">thunderstorm</option>
+//   <option value="snow">snow</option>
+//   <option value="mist">mist</option>
+// </select>
+// </div>
 
