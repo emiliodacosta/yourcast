@@ -20,30 +20,27 @@ class App extends Component {
     this.onPreviewChange = this.onPreviewChange.bind(this)
   }
 
-  getCoordsAndWeather() {
-    axios.get('http://ip-api.com/json')
+  getWeather = ({ coords }) => {
+    this.setState({
+      lat: coords.latitude,
+      lon: coords.longitude
+    })
+    let weatherData = 'http://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + coords.longitude + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+    weatherData = 'http://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
+    return axios.get(weatherData)
       .then(function (response) {
-        // console.log(response.data)
+        console.log(response)
         return response.data
       })
-      .then((data) => {
+      .then(weather => {
         this.setState({
-          lat: data.lat,
-          lon: data.lon
+          weatherData: weather
         })
-        let weatherData = 'https://api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.lon + '&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-        weatherData = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
-        return axios.get(weatherData)
-          .then(function (response) {
-            // console.log(response)
-            return response.data
-          })
-          .then(weather => {
-            this.setState({
-              weatherData: weather
-            })
-          })
       })
+  }
+
+  getCoordsAndWeather() {
+    return navigator.geolocation.getCurrentPosition(this.getWeather, console.error)
   }
 
   getMusic(condition) {
