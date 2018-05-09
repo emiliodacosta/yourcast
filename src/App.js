@@ -160,3 +160,4 @@ class App extends Component {
 export default App
 
 // For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
+// change to trigger netlify deploy
