@@ -29,7 +29,7 @@ class App extends Component {
       "https://api.openweathermap.org/data/2.5/weather?lat=" +
       this.state.lat +
       "&lon=" +
-      coords.longitude +
+      this.state.lon +
       "&appid=3faeb97e9db97e8a743f5dc0b1e043ef"
     // weatherData = 'https://api.openweathermap.org/data/2.5/weather?q=London&appid=3faeb97e9db97e8a743f5dc0b1e043ef'
     return axios
@@ -66,7 +66,7 @@ class App extends Component {
         return "https://soundcloud.com/deuxhelix/ambulance-deuxhelixrmx"
       case "Snow":
         return "https://soundcloud.com/ibanzero/voltereta"
-      case "Atmosphere":
+      case "Mist":
         return "https://www.youtube.com/watch?v=hEm0zbJe0jY"
       default:
     }
@@ -93,7 +93,7 @@ class App extends Component {
     const triggerPreview = this.state.triggerPreview
     const previewCondition = this.state.previewCondition
     let now = new Date()
-    // console.log(weather)
+    console.log(weather)
     return (
       <div className="App">
         <header className="App-header">
@@ -109,9 +109,7 @@ class App extends Component {
             {weather.main && weather.weather[0].description ? (
               <p>
                 {(weather.main.temp * (9 / 5) - 459.67).toFixed(0)}°F &{" "}
-                {weather.weather[0].main} {`(`}
-                {weather.weather[0].description}
-                {`)`} @ <Time value={now} format="HH:mm" />
+                {weather.weather[0].main} @ <Time value={now} format="HH:mm" />
                 <br />
               </p>
             ) : (
@@ -152,7 +150,7 @@ class App extends Component {
               height='100%'
               playing={false}
               controls
-              volume="1"
+              volume={1}
             />
           :
             <p> loading music... </p>
@@ -187,7 +185,7 @@ class App extends Component {
               height='100%'
               playing={false}
               controls
-              volume="1"
+              volume={1}
             />
           : null}
         </div>
@@ -202,3 +200,5 @@ export default App
 
 // For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
 // netlify requires https
+
+// {`(`} {weather.weather[0].description} {`)`}
