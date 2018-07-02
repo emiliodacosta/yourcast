@@ -66,7 +66,10 @@ class App extends Component {
         return "https://soundcloud.com/deuxhelix/ambulance-deuxhelixrmx"
       case "Snow":
         return "https://soundcloud.com/ibanzero/voltereta"
+        //MIST AND FOG CURRENTLY IDENTICAL
       case "Mist":
+        return "https://www.youtube.com/watch?v=hEm0zbJe0jY"
+      case "Fog":
         return "https://www.youtube.com/watch?v=hEm0zbJe0jY"
       default:
     }
@@ -201,4 +204,4 @@ export default App
 // For Celsius {(weather.main.temp - 273.15).toFixed(1)}°C&nbsp;
 // netlify requires https
 
-// {`(`} {weather.weather[0].description} {`)`}
+// {`(`}{weather.weather[0].description}{`)`}
