@@ -15,24 +15,27 @@
   color: whitesmoke;
 }
 
+.map {
+  max-width: 95%;
+}
+
 .weatherTrackTitle {
   color: whitesmoke;
 }
 
 .weatherTrack {
   margin: auto;
-  width: 640px;
+  width: auto;
+  height: 390px;
+  max-width: 95%;
+  max-width: 640px;
+
 }
 
 .previewSelect {
   color: whitesmoke;
   margin: auto;
   width: 50%;
-}
-
-.previewTrack {
-  margin: auto;
-  width: 640px;
 }
 
 .App-title {
